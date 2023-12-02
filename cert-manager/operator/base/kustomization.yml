@@ -5,6 +5,6 @@ kind: Kustomization
 namespace: cert-manager-operator
 
 resources:
-  - namespace.yaml
-  - operatorgroup.yaml
-  - subscription.yaml
+  - namespace.yml
+  - operatorgroup.yml
+  - subscription.yml
