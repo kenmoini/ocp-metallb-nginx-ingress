@@ -1,0 +1,26 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello-world
+  annotations:
+    # add an annotation indicating the issuer to use.
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    acme.cert-manager.io/http01-ingress-class: nginx
+spec:
+  rules:
+  - host: hello.test.kemo.labs
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: httpd
+            port:
+              number: 8080
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - hello.test.kemo.labs
+    secretName: hello-world-ingress-cert

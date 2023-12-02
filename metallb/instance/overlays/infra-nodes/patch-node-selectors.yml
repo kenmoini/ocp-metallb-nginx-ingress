@@ -1,0 +1,8 @@
+---
+apiVersion: metallb.io/v1beta1
+kind: MetalLB
+metadata:
+  name: metallb
+spec:
+  nodeSelector:  
+    node-role.kubernetes.io/infra: ""

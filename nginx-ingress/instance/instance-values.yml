@@ -1,0 +1,113 @@
+---
+# Adapt when needed from the Helm Chart values: https://github.com/kubernetes/ingress-nginx/blob/main/charts/ingress-nginx/values.yaml
+apiVersion: charts.nginx.org/v1alpha1
+kind: NginxIngress
+metadata:
+  annotations:
+    operator-sdk/primary-resource: /nginx
+    operator-sdk/primary-resource-type: IngressClass.networking.k8s.io
+  name: nginx-ingress
+spec:
+  controller:
+    logLevel: 1
+    ingressClass:
+      name: nginx
+    kind: deployment
+    #kind: daemonset
+    replicaCount: 1
+    # Service definition, namely the annotation to use the metallb load balancer
+    service:
+      create: true
+      type: LoadBalancer
+      annotations:
+        metallb.universe.tf/address-pool: lab-pool
+      externalIPs: []
+      customPorts: []
+      loadBalancerIP: ''
+      externalTrafficPolicy: Local
+      httpPort:
+        enable: true
+        port: 80
+        targetPort: 80
+      httpsPort:
+        enable: true
+        port: 443
+        targetPort: 443
+      loadBalancerSourceRanges: []
+      extraLabels: {}
+    # UBI-based Image
+    image:
+      pullPolicy: IfNotPresent
+      repository: nginx/nginx-ingress
+      tag: 3.2.0-ubi
+    # Volume mounts for the trusted CA bundle
+    volumeMounts: 
+    - name: trusted-ca
+      mountPath: /etc/pki/tls/certs/cert-manager-tls-ca-bundle.crt
+      subPath: ca-bundle.crt
+    volumes:
+    - name: trusted-ca
+      configMap:
+        name: trusted-ca
+        defaultMode: 420
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+    includeYear: false
+    enableCertManager: false
+    hostNetwork: false
+    enableLatencyMetrics: false
+    setAsDefaultIngress: false
+    terminationGracePeriodSeconds: 30
+    nginxStatus:
+      allowCidrs: 127.0.0.1
+      enable: true
+      port: 8080
+    nginxReloadTimeout: 60000
+    healthStatus: false
+    appprotect:
+      enable: false
+    minReadySeconds: 1
+    disableIPV6: false
+    enableCustomResources: true
+    globalConfiguration:
+      create: false
+      spec: {}
+    reportIngressStatus:
+      annotations: {}
+      enable: true
+      enableLeaderElection: true
+      ingressLink: ''
+    enablePreviewPolicies: false
+    readyStatus:
+      enable: true
+      initialDelaySeconds: 0
+      port: 8081
+    autoscaling:
+      annotations: {}
+      enabled: false
+      maxReplicas: 3
+      minReplicas: 1
+      targetCPUUtilizationPercentage: 50
+      targetMemoryUtilizationPercentage: 50
+    enableSnippets: false
+    nginxDebug: false
+    appprotectdos:
+      debug: false
+      enable: false
+      maxDaemons: 0
+      maxWorkers: 0
+      memory: 0
+    dnsPolicy: ClusterFirst
+    enableExternalDNS: false
+    enableTLSPassthrough: false
+    enableOIDC: false
+    healthStatusURI: /nginx-health
+  prometheus:
+    create: true
+    port: 9113
+    scheme: http
+  rbac:
+    create: true
+  readOnlyRootFilesystem: false
