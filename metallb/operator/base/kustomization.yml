@@ -6,5 +6,5 @@ namespace: metallb-system
 
 resources:
   - namespace.yaml
-  - operator-group.yaml
+  - operatorgroup.yaml
   - subscription.yaml
