@@ -6,7 +6,7 @@ namespace: nginx-ingress
 
 resources:
   - namespace.yml
-  - operator-group.yml
+  - operatorgroup.yml
   - subscription.yml
   - scc.yml
   - clusterrole.yml
