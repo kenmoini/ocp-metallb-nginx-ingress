@@ -2,10 +2,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: httpd
+  name: httpd-no-tls
 spec:
   rules:
-  - host: hello.test.kemo.labs
+  - host: hello-everyone.test.kemo.labs
     http:
       paths:
       - path: /
